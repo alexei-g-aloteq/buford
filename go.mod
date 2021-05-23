@@ -1,4 +1,4 @@
-module github.com/RobotsAndPencils/buford
+module github.com/alexei-g-aloteq/buford
 
 go 1.13
 
