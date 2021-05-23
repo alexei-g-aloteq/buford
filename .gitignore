@@ -7,3 +7,4 @@ c.out
 !testdata/*
 *.sublime-project
 coverage.txt
+profile.out

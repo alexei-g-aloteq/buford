@@ -72,5 +72,10 @@ func (h *Headers) set(reqHeader http.Header) {
 
 	if h.Type != "" {
 		reqHeader.Set("apns-push-type", string(h.Type))
+
+		if h.Type == Background {
+			// APNS requirement!
+			reqHeader.Set("apns-priority", "5")
+		}
 	}
 }

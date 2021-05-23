@@ -15,12 +15,17 @@ import (
 	"github.com/aai/gocrypto/pkcs7"
 )
 
+type manifestRecord struct {
+	HashType  string `json:"hashType"`
+	HashValue string `json:"hashValue"`
+}
+
 // Package for website push package or wallet pass package.
 type Package struct {
 	z *zip.Writer
 
 	// manifest is a map of relative file paths to their SHA checksums
-	manifest map[string]string
+	manifest map[string]manifestRecord
 
 	err error
 }
@@ -29,7 +34,7 @@ type Package struct {
 func New(w io.Writer) Package {
 	return Package{
 		z:        zip.NewWriter(w),
-		manifest: make(map[string]string),
+		manifest: make(map[string]manifestRecord),
 	}
 }
 
@@ -67,7 +72,7 @@ func (p *Package) Copy(name string, r io.Reader) {
 		return
 	}
 
-	p.manifest[name] = checksum
+	p.manifest[name] = manifestRecord{HashValue: checksum, HashType: "sha512"}
 }
 
 // File writes a file to the push package.

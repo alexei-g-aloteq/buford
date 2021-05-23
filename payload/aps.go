@@ -6,6 +6,8 @@ import (
 	"github.com/RobotsAndPencils/buford/payload/badge"
 )
 
+// https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification?language=objc
+
 // APS is Apple's reserved namespace.
 // Use it for payloads destined to mobile devices (iOS).
 type APS struct {
@@ -17,21 +19,27 @@ type APS struct {
 	// or a specific value with badge.New(n).
 	Badge badge.Badge
 
-	// The name of a sound file to play as an alert.
-	Sound string
+	// Details how to play alert.
+	Sound Sound
+
+	// Thread identifier to create notification groups in iOS 12 or newer.
+	ThreadID string
+
+	// Category identifier for custom actions in iOS 8 or newer.
+	Category string
 
 	// Content available is for silent notifications
 	// with no alert, sound, or badge.
 	ContentAvailable bool
 
-	// Category identifier for custom actions in iOS 8 or newer.
-	Category string
-
 	// Mutable is used for Service Extensions introduced in iOS 10.
 	MutableContent bool
 
-	// Thread identifier to create notification groups in iOS 12 or newer.
-	ThreadID string
+	// Content identifier.
+	TargetContentID string
+
+	// URL arguments for Safari pushes: https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/NotificationProgrammingGuideForWebsites/PushNotifications/PushNotifications.html#//apple_ref/doc/uid/TP40013225-CH3-SW17
+	SafariURLArgs []string
 }
 
 // Alert dictionary.
@@ -42,7 +50,9 @@ type Alert struct {
 	TitleLocArgs []string `json:"title-loc-args,omitempty"`
 
 	// Subtitle added in iOS 10
-	Subtitle string `json:"subtitle,omitempty"`
+	Subtitle        string   `json:"subtitle,omitempty"`
+	SubtitleLocKey  string   `json:"subtitle-loc-key,omitempty"`
+	SubtitleLocArgs []string `json:"subtitle-loc-args,omitempty"`
 
 	// Body text of the alert message.
 	Body    string   `json:"body,omitempty"`
@@ -54,6 +64,16 @@ type Alert struct {
 
 	// Image file to be used when user taps or slides the action button.
 	LaunchImage string `json:"launch-image,omitempty"`
+
+	// String for "View" button on Safari.
+	SafariAction string `json:"action,omitempty"`
+}
+
+// Sound dictionary.
+type Sound struct {
+	SoundName      string  `json:"name,omitempty"`
+	IsCritical     int     `json:"critical,omitempty"`
+	CriticalVolume float32 `json:"volume,omitempty"`
 }
 
 // isSimple alert with only Body set.
@@ -84,7 +104,7 @@ func (a *APS) Map() map[string]interface{} {
 	if n, ok := a.Badge.Number(); ok {
 		aps["badge"] = n
 	}
-	if a.Sound != "" {
+	if a.Sound.SoundName != "" {
 		aps["sound"] = a.Sound
 	}
 	if a.ContentAvailable {
@@ -98,6 +118,12 @@ func (a *APS) Map() map[string]interface{} {
 	}
 	if a.ThreadID != "" {
 		aps["thread-id"] = a.ThreadID
+	}
+	if a.TargetContentID != "" {
+		aps["target-content-id"] = a.TargetContentID
+	}
+	if len(a.SafariURLArgs) > 0 {
+		aps["url-args"] = a.SafariURLArgs
 	}
 
 	// wrap in "aps" to form the final payload

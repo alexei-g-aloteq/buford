@@ -13,7 +13,7 @@ func ExampleAPS() {
 	p := payload.APS{
 		Alert: payload.Alert{Body: "Hello HTTP/2"},
 		Badge: badge.New(42),
-		Sound: "bingbong.aiff",
+		Sound: payload.Sound{SoundName: "bingbong.aiff"},
 	}
 
 	b, err := json.Marshal(p)
@@ -43,7 +43,7 @@ func ExampleAPS_Map() {
 func ExampleAPS_Validate() {
 	p := payload.APS{
 		Badge: badge.Preserve,
-		Sound: "bingbong.aiff",
+		Sound: payload.Sound{SoundName: "bingbong.aiff"},
 	}
 	if err := p.Validate(); err != nil {
 		fmt.Println(err)
@@ -66,9 +66,9 @@ func TestPayload(t *testing.T) {
 			payload.APS{
 				Alert: payload.Alert{Body: "You got your emails."},
 				Badge: badge.New(9),
-				Sound: "bingbong.aiff",
+				Sound: payload.Sound{SoundName: "bingbong.aiff"},
 			},
-			[]byte(`{"aps":{"alert":"You got your emails.","badge":9,"sound":"bingbong.aiff"}}`),
+			[]byte(`{"aps":{"alert":"You got your emails.","badge":9,"sound":{"name":"bingbong.aiff"}}}`),
 		},
 		{
 			payload.APS{ContentAvailable: true},
@@ -129,7 +129,7 @@ func TestValidAPS(t *testing.T) {
 
 func TestInvalidAPS(t *testing.T) {
 	tests := []*payload.APS{
-		{Sound: "bingbong.aiff"},
+		{Sound: payload.Sound{SoundName: "bingbong.aiff"}},
 		{},
 		nil,
 	}
