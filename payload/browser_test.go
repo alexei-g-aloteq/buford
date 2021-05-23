@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/RobotsAndPencils/buford/payload"
+	"github.com/alexei-g-aloteq/buford/payload"
 )
 
 func ExampleBrowser() {

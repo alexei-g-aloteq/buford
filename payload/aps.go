@@ -3,7 +3,7 @@ package payload
 import (
 	"encoding/json"
 
-	"github.com/RobotsAndPencils/buford/payload/badge"
+	"github.com/alexei-g-aloteq/buford/payload/badge"
 )
 
 // https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification?language=objc

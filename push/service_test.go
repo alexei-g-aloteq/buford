@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/RobotsAndPencils/buford/certificate"
-	"github.com/RobotsAndPencils/buford/push"
+	"github.com/alexei-g-aloteq/buford/certificate"
+	"github.com/alexei-g-aloteq/buford/push"
 )
 
 func TestNewClient(t *testing.T) {
