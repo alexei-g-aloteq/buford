@@ -40,7 +40,20 @@ type APS struct {
 
 	// URL arguments for Safari pushes: https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/NotificationProgrammingGuideForWebsites/PushNotifications/PushNotifications.html#//apple_ref/doc/uid/TP40013225-CH3-SW17
 	SafariURLArgs []string
+
+	InterruptionLevel InterruptionLevel
+
+	RelevanceScore float32
 }
+
+type InterruptionLevel string
+
+const (
+	InterruptionLevelPassive 		InterruptionLevel = "passive"
+	InterruptionLevelActive 		InterruptionLevel = "active"
+	InterruptionLevelTimeSensitive 	InterruptionLevel = "time-sensitive"
+	InterruptionLevelCritical 		InterruptionLevel = "critical"
+)
 
 // Alert dictionary.
 type Alert struct {
@@ -124,6 +137,12 @@ func (a *APS) Map() map[string]interface{} {
 	}
 	if len(a.SafariURLArgs) > 0 {
 		aps["url-args"] = a.SafariURLArgs
+	}
+	if a.InterruptionLevel != "" {
+		aps["interruption-level"] = a.InterruptionLevel
+	}
+	if a.RelevanceScore > 0 {
+		aps["relevance-score"] = a.RelevanceScore
 	}
 
 	// wrap in "aps" to form the final payload
