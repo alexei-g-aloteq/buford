@@ -7,7 +7,6 @@ package certificate
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -37,9 +36,11 @@ func Decode(p12 []byte, password string) (tls.Certificate, error) {
 	if err != nil {
 		return tls.Certificate{}, err
 	}
-	if err := verify(cert); err != nil {
-		return tls.Certificate{}, err
-	}
+	/*
+		if err := verify(cert); err != nil {
+			return tls.Certificate{}, err
+		}
+	*/
 
 	// wraps x509 certificate as a tls.Certificate:
 	return tls.Certificate{
@@ -63,6 +64,7 @@ func TopicFromCert(cert tls.Certificate) string {
 	return topic
 }
 
+/*
 // verify checks if a certificate has expired
 func verify(cert *x509.Certificate) error {
 	_, err := cert.Verify(x509.VerifyOptions{})
@@ -89,3 +91,4 @@ func verify(cert *x509.Certificate) error {
 		return err
 	}
 }
+*/
